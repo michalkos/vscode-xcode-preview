@@ -10,6 +10,7 @@ import type { FromWebview, Picker, ViewState } from "./protocol.ts";
 import { XcodeClient, XcodeToolError, messageOf } from "./xcode/client.ts";
 import type { RenderDestination, SupportedOverrides } from "./xcode/schemas.ts";
 import { headlessStatus, resolveDeveloperDir, setupGuide } from "./xcode/setup.ts";
+import { openInXcode } from "./xcode/xed.ts";
 
 type Overrides = {
   destination?: string | undefined;
@@ -25,6 +26,9 @@ type Overrides = {
 type RenderView = Pick<ViewState, "status" | "message" | "image" | "problems">;
 
 const SETUP_HINT = "If this keeps happening, run “Xcode Preview: Check Setup”.";
+
+/** The prefix of the snapshot data URIs held in `ViewState.image`. */
+const PNG_DATA_URI = "data:image/png;base64,";
 
 /**
  * Owns the preview panel: tracks which Swift file and preview are shown, asks Xcode to render
@@ -194,7 +198,49 @@ export class PreviewController implements vscode.Disposable {
       case "reveal":
         if (this.#source) void revealLine(this.#source, message.line);
         break;
+      case "openInXcode":
+        void this.#report(this.#openInXcode());
+        break;
+      case "export":
+        void this.#report(this.#exportImage());
+        break;
     }
+  }
+
+  /** Shows a failed panel action as an error message, like failed commands. */
+  async #report(action: Promise<void>): Promise<void> {
+    try {
+      await action;
+    } catch (error) {
+      this.#log.error(messageOf(error));
+      void vscode.window.showErrorMessage(`Xcode Preview: ${messageOf(error)}`);
+    }
+  }
+
+  async #openInXcode(): Promise<void> {
+    const uri = this.#source;
+    if (!uri) return;
+    await openInXcode({
+      file: uri.fsPath,
+      line: this.#previews[this.#selected]?.line,
+      project: await this.#projectFor(uri),
+      developerDir: resolveDeveloperDir(configuration().get("developerDir", "")),
+    });
+  }
+
+  /** Asks where to save the current snapshot, defaulting to `<File>-preview.png` beside the source. */
+  async #exportImage(): Promise<void> {
+    const { image } = this.#view;
+    const uri = this.#source;
+    if (!image || !uri) return;
+    const target = await vscode.window.showSaveDialog({
+      title: "Export Preview",
+      defaultUri: vscode.Uri.file(join(dirname(uri.fsPath), `${basename(uri.fsPath, ".swift")}-preview.png`)),
+      filters: { "PNG Image": ["png"] },
+    });
+    if (!target) return;
+    await vscode.workspace.fs.writeFile(target, Buffer.from(image.slice(PNG_DATA_URI.length), "base64"));
+    vscode.window.setStatusBarMessage(`Saved ${basename(target.fsPath)}`, 3000);
   }
 
   #applyPick(id: Picker["id"], value: string): void {
@@ -434,7 +480,7 @@ async function readPng(path: string): Promise<string> {
   const bytes = await readFile(path);
   const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
   if (!bytes.subarray(0, 8).equals(signature)) throw new Error(`Xcode's snapshot isn't a PNG: ${path}`);
-  return `data:image/png;base64,${bytes.toString("base64")}`;
+  return `${PNG_DATA_URI}${bytes.toString("base64")}`;
 }
 
 async function revealLine(uri: vscode.Uri, line: number): Promise<void> {

@@ -20,6 +20,8 @@ Xcode 27 can run headless and exposes its tools over [MCP](https://modelcontextp
 - **Interactive** mode on simulators: the preview runs live for a moment before the snapshot, so content loaded in `.task` or `onAppear` and finished animations show up.
 - Supports `#Preview(arguments:)` items and widget timelines.
 - Shows build errors as short `File.swift:12: message` lines, with the full log in the **Xcode Preview** output.
+- **Export** the rendered preview as a PNG, for PR descriptions, docs or App Store drafts.
+- **Open in Xcode** jumps to the selected preview in Xcode, when you want its live, interactive canvas.
 - Follows the active Swift editor.
 
 ## Install
