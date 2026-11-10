@@ -9,6 +9,14 @@
     "url": "https://kos.codes"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michalkos/vscode-xcode-preview"
+  },
+  "bugs": {
+    "url": "https://github.com/michalkos/vscode-xcode-preview/issues"
+  },
+  "homepage": "https://github.com/michalkos/vscode-xcode-preview#readme",
   "type": "module",
   "engines": {
     "vscode": "^1.100.0",
@@ -128,7 +136,7 @@
     "check": "tsc -p .",
     "test": "vitest run",
     "render": "node scripts/render.ts",
-    "package": "vsce package --no-dependencies --allow-missing-repository",
+    "package": "vsce package --no-dependencies",
     "vscode:prepublish": "pnpm check && pnpm test && pnpm build"
   },
   "dependencies": {
