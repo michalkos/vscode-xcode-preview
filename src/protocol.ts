@@ -39,5 +39,9 @@ export const FromWebview = z.discriminatedUnion("type", [
   z.object({ type: z.literal("select"), index: z.number().int().nonnegative() }),
   z.object({ type: z.literal("pick"), id: PickerIdSchema, value: z.string() }),
   z.object({ type: z.literal("reveal"), line: z.number().int().positive() }),
+  /** Opens the selected preview's file in Xcode, for its live canvas. */
+  z.object({ type: z.literal("openInXcode") }),
+  /** Saves the current snapshot as a PNG file. */
+  z.object({ type: z.literal("export") }),
 ]);
 export type FromWebview = z.infer<typeof FromWebview>;

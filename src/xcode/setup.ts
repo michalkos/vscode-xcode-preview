@@ -12,12 +12,14 @@ export function resolveDeveloperDir(setting: string): string | undefined {
   return path.endsWith(".app") || path.endsWith(".app/") ? join(path, "Contents", "Developer") : path;
 }
 
+/** The environment for running Xcode tools, pointed at `developerDir` when one is set. */
+export function xcodeEnv(developerDir: string | undefined): NodeJS.ProcessEnv {
+  return { ...process.env, ...(developerDir ? { DEVELOPER_DIR: developerDir } : {}) };
+}
+
 /** Reads the state of Xcode's headless MCP server and returns it along with a human-readable report. */
 export async function headlessStatus(developerDir: string | undefined) {
-  const options = {
-    env: { ...process.env, ...(developerDir ? { DEVELOPER_DIR: developerDir } : {}) },
-    timeout: 15_000,
-  };
+  const options = { env: xcodeEnv(developerDir), timeout: 15_000 };
   try {
     const [json, text] = await Promise.all([
       run("/usr/bin/xcrun", ["mcp-server", "status", "--format", "json"], options),
