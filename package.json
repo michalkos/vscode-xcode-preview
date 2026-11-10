@@ -127,6 +127,14 @@
           "maximum": 900,
           "scope": "resource",
           "description": "Seconds Xcode may spend building and rendering one preview. First builds of large projects can take several minutes."
+        },
+        "xcodePreview.interactiveDelay": {
+          "type": "integer",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 60,
+          "scope": "resource",
+          "markdownDescription": "In **Interactive** mode, seconds the preview runs before its snapshot is taken, so `.task`, `onAppear` and animations can finish."
         }
       }
     }

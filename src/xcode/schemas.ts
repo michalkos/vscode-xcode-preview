@@ -35,6 +35,8 @@ const CanvasControls = z.object({
 });
 
 const SupportedOverrides = z.object({
+  /** "static" and, on simulator destinations, "interactive". */
+  displayModes: z.array(z.string()).default([]),
   localizations: z.array(z.string()).default([]),
   previewVariants: z.record(z.string(), z.array(z.string())).default({}),
   renderDestinations: z.array(RenderDestination).default([]),
