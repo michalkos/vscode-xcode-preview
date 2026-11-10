@@ -2,6 +2,12 @@
 
 All notable changes to Xcode Preview.
 
+## [0.1.1](https://github.com/michalkos/vscode-xcode-preview/releases/tag/v0.1.1) - 2026-11-10
+
+### Changes
+
+- Add extension icon ([37a29e6](https://github.com/michalkos/vscode-xcode-preview/commit/37a29e675765835088c9b0831766f535798bde69))
+
 ## [0.1.0](https://github.com/michalkos/vscode-xcode-preview/releases/tag/v0.1.0) - 2026-11-10
 
 ### Features
