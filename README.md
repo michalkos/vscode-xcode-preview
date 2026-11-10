@@ -6,7 +6,8 @@ Xcode 27 can run headless and exposes its tools over [MCP](https://modelcontextp
 
 ## Features
 
-- A tab for each `#Preview` and `PreviewProvider` in the file. Double-click a tab to jump to its code.
+- A **▶ Preview** link above each `#Preview` and `PreviewProvider` that opens that preview.
+- A tab for each preview in the file. Double-click a tab to jump to its code.
 - Re-renders when you save any Swift file in the workspace.
 - Pick the device, language, color scheme, Dynamic Type size, orientation and the other variants Xcode offers for the preview.
 - Supports `#Preview(arguments:)` items and widget timelines.
@@ -28,7 +29,7 @@ Do this once:
    sudo xcrun mcp-server enable
    ```
 
-2. Open a Swift file and click the **Open Preview** button in the editor title bar. The first time, Xcode asks you to approve VS Code as an agent and your project folder. List the pending requests:
+2. Open a Swift file and click **▶ Preview** above a preview, or the **Open Preview** button in the editor title bar. The first time, Xcode asks you to approve VS Code as an agent and your project folder. List the pending requests:
 
    ```sh
    xcrun mcp-server status
@@ -60,6 +61,7 @@ Do this once:
 | --- | --- | --- |
 | `xcodePreview.developerDir` | `""` | Xcode to use (`Xcode.app` or its `Contents/Developer`). Empty uses `xcode-select`. |
 | `xcodePreview.project` | `""` | `.xcworkspace` or `.xcodeproj` to use. Empty finds the nearest one. |
+| `xcodePreview.codeLens` | `true` | Show the **▶ Preview** link above each preview. |
 | `xcodePreview.refreshOnSave` | `true` | Re-render when a Swift file is saved. |
 | `xcodePreview.renderTimeout` | `120` | Seconds Xcode may spend building and rendering one preview. |
 

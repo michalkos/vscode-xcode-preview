@@ -68,8 +68,11 @@ export class PreviewController implements vscode.Disposable {
     );
   }
 
-  /** Opens the panel for a Swift file (the active editor's by default) and renders its first preview. */
-  async open(uri?: vscode.Uri): Promise<void> {
+  /**
+   * Opens the panel for a Swift file (the active editor's by default) and renders one of its
+   * previews: `index` when given (from a CodeLens link), otherwise the one already selected.
+   */
+  async open(uri?: vscode.Uri, index?: number): Promise<void> {
     const target = uri ?? vscode.window.activeTextEditor?.document.uri;
     if (!target || !isSwift(target)) {
       void vscode.window.showInformationMessage("Open a Swift file to preview it.");
@@ -84,7 +87,7 @@ export class PreviewController implements vscode.Disposable {
       },
     );
     this.#panel.reveal();
-    this.#show(await vscode.workspace.openTextDocument(target));
+    this.#show(await vscode.workspace.openTextDocument(target), index);
   }
 
   refresh(): void {
@@ -138,17 +141,23 @@ export class PreviewController implements vscode.Disposable {
     for (const subscription of this.#subscriptions) subscription.dispose();
   }
 
-  #show(document: vscode.TextDocument): void {
+  #show(document: vscode.TextDocument, index?: number): void {
     const switched = document.uri.toString() !== this.#source?.toString();
     this.#source = document.uri;
     this.#parse(document);
     if (switched) {
-      this.#selected = 0;
-      this.#overrides.groupItem = undefined;
-      this.#overrides.timeline = undefined;
+      this.#select(0);
       this.#view = { status: "idle", message: undefined, image: undefined, problems: [] };
     }
+    if (index !== undefined && index !== this.#selected && index < this.#previews.length) this.#select(index);
     this.#requestRender();
+  }
+
+  /** Selects a preview tab. Argument and timeline choices belong to one preview, so they reset. */
+  #select(index: number): void {
+    this.#selected = index;
+    this.#overrides.groupItem = undefined;
+    this.#overrides.timeline = undefined;
   }
 
   #onSave(document: vscode.TextDocument): void {
@@ -173,9 +182,7 @@ export class PreviewController implements vscode.Disposable {
         this.refresh();
         break;
       case "select":
-        this.#selected = message.index;
-        this.#overrides.groupItem = undefined;
-        this.#overrides.timeline = undefined;
+        this.#select(message.index);
         this.#requestRender();
         break;
       case "pick":

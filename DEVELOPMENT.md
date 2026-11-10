@@ -30,6 +30,7 @@ pnpm build   # bundle into dist/
 src/
   extension.ts      Activation and command registration
   controller.ts     Panel state: which file and preview, overrides, render-on-save
+  codelens.ts       "▶ Preview" links above each preview declaration
   panel.ts          The webview panel and its security policy
   protocol.ts       Typed messages between the extension and the webview
   previews.ts       Finds #Preview / PreviewProvider declarations in Swift source
@@ -46,7 +47,7 @@ scripts/render.ts   Command-line renderer for debugging the Xcode side
 test/               Unit tests (vitest)
 ```
 
-The `vscode` module is only imported by `extension.ts`, `controller.ts` and `panel.ts`. Everything else runs in plain Node, which keeps it easy to test.
+The `vscode` module is only imported by `extension.ts`, `controller.ts`, `codelens.ts` and `panel.ts`. Everything else runs in plain Node, which keeps it easy to test.
 
 ## Test the Xcode side without VS Code
 
@@ -73,7 +74,7 @@ Xcode treats `node` as its own agent, separate from VS Code, so it needs its own
    ```
 
 3. Press **F5** (Run Extension). An Extension Development Host window opens with the extension loaded.
-4. In that window, open a folder that contains an Xcode project, open a Swift file with a preview, and click **Open Preview** in the editor title bar.
+4. In that window, open a folder that contains an Xcode project, open a Swift file with a preview, and click **▶ Preview** above it.
 5. After a code change, wait for the watch build, then run **Developer: Reload Window** in the host window.
 
 Breakpoints in `src/` work, because the watch build writes source maps.

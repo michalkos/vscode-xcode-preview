@@ -26,6 +26,9 @@
     "ios"
   ],
   "main": "./dist/extension.cjs",
+  "activationEvents": [
+    "onLanguage:swift"
+  ],
   "extensionKind": [
     "workspace"
   ],
@@ -95,6 +98,12 @@
           "default": "",
           "scope": "resource",
           "markdownDescription": "Path to the `.xcworkspace` or `.xcodeproj` to preview with, absolute or relative to the workspace folder. Leave empty to find it automatically."
+        },
+        "xcodePreview.codeLens": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Show a “▶ Preview” link above each #Preview and PreviewProvider."
         },
         "xcodePreview.refreshOnSave": {
           "type": "boolean",
