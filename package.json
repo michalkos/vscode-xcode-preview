@@ -137,8 +137,12 @@
     "test": "vitest run",
     "render": "node scripts/render.ts",
     "package": "vsce package --no-dependencies",
-    "vscode:prepublish": "pnpm check && pnpm test && pnpm build"
+    "vscode:prepublish": "pnpm check && pnpm test && pnpm build",
+    "changelog": "git-cliff --unreleased --strip header",
+    "release": "npm version -m \"chore(release): v%s\"",
+    "version": "git-cliff --unreleased --tag v$(node -p \"require('./package.json').version\") --prepend CHANGELOG.md && git add CHANGELOG.md"
   },
+  "packageManager": "pnpm@10.8.1",
   "dependencies": {
     "@modelcontextprotocol/client": "^2.4.0",
     "zod": "^4.6.7"
@@ -148,6 +152,7 @@
     "@types/vscode": "~1.100.0",
     "@vscode/vsce": "^4.1.0",
     "esbuild": "^0.28.2",
+    "git-cliff": "^2.14.2",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   }

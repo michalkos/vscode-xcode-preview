@@ -169,3 +169,26 @@ Before opening a pull request:
 ```sh
 pnpm check && pnpm test && pnpm build
 ```
+
+## Releasing
+
+`CHANGELOG.md` is generated from commit messages by [git-cliff](https://git-cliff.org), configured in `cliff.toml`. Use [conventional commits](https://www.conventionalcommits.org) so changes land in the right section:
+
+| Prefix | Changelog section |
+| --- | --- |
+| `feat:` | Features |
+| `fix:` | Fixes |
+| `perf:` | Performance |
+| `docs:` | Documentation |
+| `chore:`, `ci:`, `build:`, `test:`, `refactor:`, `style:` | Left out |
+| anything else | Changes |
+
+To cut a release:
+
+```sh
+pnpm changelog          # preview the next section
+pnpm release minor      # or patch / major: bumps, writes CHANGELOG.md, commits and tags
+git push --follow-tags  # the tag runs .github/workflows/release.yml
+```
+
+The Release workflow typechecks, tests and packages the extension, then creates a GitHub Release with the `.vsix` attached and the version's changelog section as notes. It fails if the tag doesn't match the `package.json` version or if `CHANGELOG.md` has no section for it.
