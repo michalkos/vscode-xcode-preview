@@ -2,7 +2,7 @@
   "name": "xcode-preview",
   "displayName": "Xcode Preview",
   "description": "SwiftUI previews in VS Code, rendered by Xcode 27's headless MCP server.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "kos-codes",
   "author": {
     "name": "Michal Kos",
