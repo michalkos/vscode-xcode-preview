@@ -1,0 +1,137 @@
+{
+  "name": "xcode-preview",
+  "displayName": "Xcode Preview",
+  "description": "SwiftUI previews in VS Code, rendered by Xcode 27's headless MCP server.",
+  "version": "0.1.0",
+  "publisher": "kos-codes",
+  "author": {
+    "name": "Michal Kos",
+    "url": "https://kos.codes"
+  },
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "vscode": "^1.100.0",
+    "node": ">=22.18"
+  },
+  "categories": [
+    "Programming Languages",
+    "Visualization"
+  ],
+  "keywords": [
+    "swift",
+    "swiftui",
+    "preview",
+    "xcode",
+    "ios"
+  ],
+  "main": "./dist/extension.cjs",
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "Rendering a preview builds and runs code from your Xcode project."
+    },
+    "virtualWorkspaces": false
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "xcodePreview.open",
+        "title": "Open Preview",
+        "category": "Xcode Preview",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "xcodePreview.refresh",
+        "title": "Refresh Preview",
+        "category": "Xcode Preview",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "xcodePreview.selectProject",
+        "title": "Select Xcode Project or Workspace",
+        "category": "Xcode Preview"
+      },
+      {
+        "command": "xcodePreview.selectScheme",
+        "title": "Select Scheme",
+        "category": "Xcode Preview"
+      },
+      {
+        "command": "xcodePreview.checkSetup",
+        "title": "Check Setup",
+        "category": "Xcode Preview"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "xcodePreview.open",
+          "when": "resourceExtname == .swift && isWorkspaceTrusted",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "xcodePreview.open",
+          "when": "resourceExtname == .swift"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Xcode Preview",
+      "properties": {
+        "xcodePreview.developerDir": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "Xcode to use, as a path to `Xcode.app` or its `Contents/Developer` folder. Leave empty to use `xcode-select`. Needs Xcode 27 or newer."
+        },
+        "xcodePreview.project": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "markdownDescription": "Path to the `.xcworkspace` or `.xcodeproj` to preview with, absolute or relative to the workspace folder. Leave empty to find it automatically."
+        },
+        "xcodePreview.refreshOnSave": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Re-render the open preview when a Swift file is saved."
+        },
+        "xcodePreview.renderTimeout": {
+          "type": "integer",
+          "default": 120,
+          "minimum": 10,
+          "maximum": 900,
+          "scope": "resource",
+          "description": "Seconds Xcode may spend building and rendering one preview. First builds of large projects can take several minutes."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs --production",
+    "watch": "node esbuild.mjs --watch",
+    "check": "tsc -p .",
+    "test": "vitest run",
+    "render": "node scripts/render.ts",
+    "package": "vsce package --no-dependencies --allow-missing-repository",
+    "vscode:prepublish": "pnpm check && pnpm test && pnpm build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "^2.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "@types/vscode": "~1.100.0",
+    "@vscode/vsce": "^4.1.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
