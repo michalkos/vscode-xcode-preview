@@ -3,7 +3,7 @@ import { z } from "zod";
 // Messages between the extension and the preview webview. The webview imports types only,
 // so zod stays out of its bundle.
 
-export type PickerId = "destination" | "locale" | "groupItem" | "timeline" | `variant:${string}`;
+export type PickerId = "destination" | "mode" | "locale" | "groupItem" | "timeline" | `variant:${string}`;
 
 /** A dropdown in the preview toolbar. An empty `value` means Xcode's default. */
 export type Picker = {
@@ -30,7 +30,7 @@ export type ToWebview = { type: "state"; state: ViewState };
 const PickerIdSchema = z.custom<PickerId>(
   (value) =>
     typeof value === "string" &&
-    (["destination", "locale", "groupItem", "timeline"].includes(value) || value.startsWith("variant:")),
+    (["destination", "mode", "locale", "groupItem", "timeline"].includes(value) || value.startsWith("variant:")),
 );
 
 export const FromWebview = z.discriminatedUnion("type", [

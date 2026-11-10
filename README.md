@@ -17,6 +17,7 @@ Xcode 27 can run headless and exposes its tools over [MCP](https://modelcontextp
 - A tab for each preview in the file. Double-click a tab to jump to its code.
 - Re-renders when you save any Swift file in the workspace.
 - Pick the device, language, color scheme, Dynamic Type size, orientation and the other variants Xcode offers for the preview.
+- **Interactive** mode on simulators: the preview runs live for a moment before the snapshot, so content loaded in `.task` or `onAppear` and finished animations show up.
 - Supports `#Preview(arguments:)` items and widget timelines.
 - Shows build errors as short `File.swift:12: message` lines, with the full log in the **Xcode Preview** output.
 - Follows the active Swift editor.
@@ -81,6 +82,7 @@ Do this once:
 | `xcodePreview.codeLens` | `true` | Show the **▶ Preview** link above each preview. |
 | `xcodePreview.refreshOnSave` | `true` | Re-render when a Swift file is saved. |
 | `xcodePreview.renderTimeout` | `120` | Seconds Xcode may spend building and rendering one preview. |
+| `xcodePreview.interactiveDelay` | `2` | In Interactive mode, seconds the preview runs before its snapshot. |
 
 ## How it works
 
@@ -97,7 +99,7 @@ The first render of a project is slow because Xcode builds it, which can take mi
 
 ## Limitations
 
-- **Static images:** previews aren't interactive. Xcode's headless `RenderPreview` returns an image, not a live view.
+- **Images, not live views:** you can't tap or scroll the preview. Xcode's headless `RenderPreview` returns a snapshot. Interactive mode runs the preview first, but still shows a single frame.
 - **Saved files only:** Xcode renders what's saved on disk. Turn on VS Code's Auto Save if you want refreshes while you type.
 - **One render at a time:** changes made during a render are combined into one follow-up render.
 

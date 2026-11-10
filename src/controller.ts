@@ -13,6 +13,8 @@ import { headlessStatus, resolveDeveloperDir, setupGuide } from "./xcode/setup.t
 
 type Overrides = {
   destination?: string | undefined;
+  /** Render live for `interactiveDelay` seconds before the snapshot, instead of a static render. */
+  interactive?: boolean | undefined;
   locale?: string | undefined;
   variants: Record<string, string>;
   groupItem?: number | undefined;
@@ -198,6 +200,7 @@ export class PreviewController implements vscode.Disposable {
   #applyPick(id: Picker["id"], value: string): void {
     const chosen = value || undefined;
     if (id === "destination") this.#overrides.destination = chosen;
+    else if (id === "mode") this.#overrides.interactive = chosen === "interactive";
     else if (id === "locale") this.#overrides.locale = chosen;
     else if (id === "groupItem") this.#overrides.groupItem = chosen === undefined ? undefined : Number(chosen);
     else if (id === "timeline") this.#overrides.timeline = chosen === undefined ? undefined : Number(chosen);
@@ -244,12 +247,14 @@ export class PreviewController implements vscode.Disposable {
       }
       const workspace = await this.#xcode.openWorkspace(project);
       const navigatorPath = await this.#xcode.navigatorPath(workspace, uri.fsPath);
+      const { interactive, ...overrides } = this.#overrides;
       const result = await this.#xcode.renderPreview({
         workspace,
         navigatorPath,
         index: preview.index,
         timeoutSeconds: configuration(uri).get("renderTimeout", 120),
-        ...this.#overrides,
+        interactiveDelay: interactive ? configuration(uri).get("interactiveDelay", 2) : undefined,
+        ...overrides,
       });
       if (version !== this.#version) return;
 
@@ -336,6 +341,18 @@ export class PreviewController implements vscode.Disposable {
         label: "Device",
         value: this.#overrides.destination ?? "",
         options: withDefault(supported.renderDestinations.map((d) => ({ value: d.identifier, label: describe(d) }))),
+      });
+    }
+    // Xcode offers interactive rendering on simulators only, not on My Mac.
+    if (supported.displayModes.includes("interactive")) {
+      pickers.push({
+        id: "mode",
+        label: "Mode",
+        value: this.#overrides.interactive ? "interactive" : "",
+        options: [
+          { value: "", label: "Static" },
+          { value: "interactive", label: "Interactive" },
+        ],
       });
     }
     if (supported.localizations.length > 1) {

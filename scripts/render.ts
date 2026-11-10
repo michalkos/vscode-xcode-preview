@@ -30,6 +30,7 @@ try {
     displayName: result.displayName,
     snapshot: result.snapshot?.path,
     destination: result.renderedDestination?.deviceModelName,
+    displayModes: result.supportedOverrides.displayModes,
     localizations: result.supportedOverrides.localizations,
     variants: Object.keys(result.supportedOverrides.previewVariants),
     canvasControls: result.supportedOverrides.canvasControls,

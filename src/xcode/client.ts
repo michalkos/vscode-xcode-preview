@@ -23,6 +23,8 @@ export type RenderRequest = {
   variants?: Record<string, string> | undefined;
   groupItem?: number | undefined;
   timeline?: number | undefined;
+  /** Runs the preview live for this many seconds before the snapshot, so `.task`, `onAppear` and animations settle. */
+  interactiveDelay?: number | undefined;
 };
 
 export class XcodeToolError extends Error {
@@ -71,8 +73,10 @@ export class XcodeClient {
   }
 
   renderPreview(request: RenderRequest): Promise<RenderPreviewResult> {
-    const { workspace, navigatorPath, index, timeoutSeconds, destination, locale, variants, groupItem, timeline } = request;
+    const { workspace, navigatorPath, index, timeoutSeconds, destination, locale, variants, groupItem, timeline, interactiveDelay } =
+      request;
     const hasCanvas = groupItem !== undefined || timeline !== undefined;
+    const interactive = interactiveDelay !== undefined;
     return this.call(
       "RenderPreview",
       {
@@ -84,6 +88,9 @@ export class XcodeClient {
         previewLocalizationOverride: locale,
         previewVariantOverrides: variants && Object.keys(variants).length ? variants : undefined,
         previewCanvasControlOverrides: hasCanvas ? { groupItemIndex: groupItem, timelineIndex: timeline } : undefined,
+        displayMode: interactive ? "interactive" : undefined,
+        // Xcode rejects a delay that isn't shorter than the timeout.
+        snapshotDelay: interactive ? Math.min(interactiveDelay, timeoutSeconds - 1) : undefined,
       },
       RenderPreviewResult,
       (timeoutSeconds + 30) * 1000,
