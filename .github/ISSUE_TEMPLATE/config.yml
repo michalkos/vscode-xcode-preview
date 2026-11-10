@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ideas and questions
+    url: https://github.com/michalkos/vscode-xcode-preview/discussions
+    about: Share ideas, ask how something works, or show what you built.
+  - name: Security vulnerability
+    url: https://github.com/michalkos/vscode-xcode-preview/security/advisories/new
+    about: Please report security issues privately.

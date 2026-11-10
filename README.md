@@ -1,6 +1,13 @@
 # Xcode Preview for VS Code
 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/kos-codes.xcode-preview?label=Marketplace)](https://marketplace.visualstudio.com/items?itemName=kos-codes.xcode-preview)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/kos-codes.xcode-preview)](https://marketplace.visualstudio.com/items?itemName=kos-codes.xcode-preview)
+[![CI](https://github.com/michalkos/vscode-xcode-preview/actions/workflows/ci.yml/badge.svg)](https://github.com/michalkos/vscode-xcode-preview/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 SwiftUI previews in VS Code, rendered by Xcode itself.
+
+![A SwiftUI file in VS Code with a ▶ Preview link above its #Preview, and the rendered iPhone preview in a panel beside it](docs/images/screenshot.webp)
 
 Xcode 27 can run headless and exposes its tools over [MCP](https://modelcontextprotocol.io), including `RenderPreview`. This extension asks it to render the `#Preview` (or `PreviewProvider`) in your current Swift file and shows the image beside your editor. It re-renders when you save. Because Xcode does the rendering, the result matches Xcode's canvas, and the Xcode window never needs to be open.
 
@@ -13,6 +20,16 @@ Xcode 27 can run headless and exposes its tools over [MCP](https://modelcontextp
 - Supports `#Preview(arguments:)` items and widget timelines.
 - Shows build errors as short `File.swift:12: message` lines, with the full log in the **Xcode Preview** output.
 - Follows the active Swift editor.
+
+## Install
+
+Install **Xcode Preview** from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=kos-codes.xcode-preview), or from the terminal:
+
+```sh
+code --install-extension kos-codes.xcode-preview
+```
+
+Each [GitHub release](https://github.com/michalkos/vscode-xcode-preview/releases) also has the `.vsix` attached, for installing manually.
 
 ## Requirements
 
@@ -98,6 +115,10 @@ pnpm package      # build a .vsix
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for running the extension locally, approvals, debugging and common problems.
 
+## Contributing
+
+Contributions and ideas are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), share ideas in [Discussions](https://github.com/michalkos/vscode-xcode-preview/discussions), and report security issues privately as described in [SECURITY.md](SECURITY.md).
+
 ## License
 
-MIT
+[MIT](LICENSE)

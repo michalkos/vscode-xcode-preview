@@ -1,0 +1,56 @@
+name: Bug report
+description: A preview doesn't render, renders wrong, or the extension misbehaves.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! First, check whether the same preview renders in Xcode's own canvas. If it fails there too, it's likely an Xcode issue.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what you saw instead. Screenshots help.
+    validations:
+      required: true
+
+  - type: textarea
+    id: preview-code
+    attributes:
+      label: Preview code
+      description: The smallest `#Preview` or `PreviewProvider` that shows the problem, if you can share it.
+      render: swift
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Xcode Preview output
+      description: View › Output › Xcode Preview. Remove anything private.
+      render: text
+
+  - type: textarea
+    id: status
+    attributes:
+      label: "`xcrun mcp-server status` output"
+      render: text
+
+  - type: dropdown
+    id: xcode-canvas
+    attributes:
+      label: Does the preview work in Xcode's canvas?
+      options:
+        - "Yes"
+        - "No"
+        - Didn't check
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: macOS, Xcode, VS Code, and Xcode Preview extension.
+      placeholder: macOS 27.1, Xcode 27.2, VS Code 1.145, Xcode Preview 0.1.1
+    validations:
+      required: true
