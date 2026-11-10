@@ -94,6 +94,8 @@ pnpm package      # build a .vsix
 
 `pnpm render <App.xcodeproj> <File.swift> [index]` renders one preview from the terminal, without VS Code, which helps when debugging the Xcode side.
 
+See [DEVELOPMENT.md](DEVELOPMENT.md) for running the extension locally, approvals, debugging and common problems.
+
 ## License
 
 MIT
